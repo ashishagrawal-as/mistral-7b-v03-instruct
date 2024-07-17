@@ -4,6 +4,15 @@ license: apache-2.0
 
 # Model Card for Mistral-7B-Instruct-v0.3
 
+---
+
+> [!IMPORTANT]
+> ❗ 
+> We recommend using `mistral_common` for tokenization as the transformers tokenizer has not been tested by the Mistral team and might give incorrect results.
+
+---
+
+
 ### 
 
 The Mistral-7B-Instruct-v0.3 Large Language Model (LLM) is an instruct fine-tuned version of the Mistral-7B-v0.3.
