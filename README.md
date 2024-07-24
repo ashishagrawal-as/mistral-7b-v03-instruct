@@ -1,5 +1,7 @@
 ---
 license: apache-2.0
+
+extra_gated_description: If you want to learn more about how we process your personal data, please read our <a href="https://mistral.ai/terms/">Privacy Policy</a>.
 ---
 
 # Model Card for Mistral-7B-Instruct-v0.3
