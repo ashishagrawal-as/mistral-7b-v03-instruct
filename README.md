@@ -132,6 +132,56 @@ chatbot = pipeline("text-generation", model="mistralai/Mistral-7B-Instruct-v0.3"
 chatbot(messages)
 ```
 
+
+## Function calling with `transformers`
+
+To use this example, you'll need `transformers` version 4.42.0 or higher. Please see the 
+[function calling guide](https://huggingface.co/docs/transformers/main/chat_templating#advanced-tool-use--function-calling)
+in the `transformers` docs for more information.
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+model_id = "mistralai/Mistral-7B-Instruct-v0.3"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+def get_current_weather(location: str, format: str):
+    """
+    Get the current weather
+
+    Args:
+        location: The city and state, e.g. San Francisco, CA
+        format: The temperature unit to use. Infer this from the users location. (choices: ["celsius", "fahrenheit"])
+    """
+    pass
+
+conversation = [{"role": "user", "content": "What's the weather like in Paris?"}]
+tools = [get_current_weather]
+
+# render the tool use prompt as a string:
+tool_use_prompt = tokenizer.apply_chat_template(
+            conversation,
+            tools=tools,
+            tokenize=False,
+            add_generation_prompt=True,
+)
+
+inputs = tokenizer(tool_use_prompt, return_tensors="pt")
+
+model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, device_map="auto")
+
+outputs = model.generate(**inputs, max_new_tokens=1000)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
+Note that, for reasons of space, this example does not show a complete cycle of calling a tool and adding the tool call and tool
+results to the chat history so that the model can use them in its next generation. For a full tool calling example, please
+see the [function calling guide](https://huggingface.co/docs/transformers/main/chat_templating#advanced-tool-use--function-calling), 
+and note that Mistral **does** use tool call IDs, so these must be included in your tool calls and tool results. They should be
+exactly 9 alphanumeric characters.
+
+
 ## Limitations
 
 The Mistral 7B Instruct model is a quick demonstration that the base model can be easily fine-tuned to achieve compelling performance. 
