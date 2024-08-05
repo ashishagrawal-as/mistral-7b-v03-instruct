@@ -44,7 +44,7 @@ mistral-chat $HOME/mistral_models/7B-Instruct-v0.3 --instruct --max_tokens 256
 ### Instruct following
 
 ```py
-from mistral_inference.model import Transformer
+from mistral_inference.transformer import Transformer
 from mistral_inference.generate import generate
 
 from mistral_common.tokens.tokenizers.mistral import MistralTokenizer
@@ -69,7 +69,7 @@ print(result)
 
 ```py
 from mistral_common.protocol.instruct.tool_calls import Function, Tool
-from mistral_inference.model import Transformer
+from mistral_inference.transformer import Transformer
 from mistral_inference.generate import generate
 
 from mistral_common.tokens.tokenizers.mistral import MistralTokenizer
