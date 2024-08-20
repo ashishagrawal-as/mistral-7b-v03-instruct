@@ -159,18 +159,19 @@ def get_current_weather(location: str, format: str):
 conversation = [{"role": "user", "content": "What's the weather like in Paris?"}]
 tools = [get_current_weather]
 
-# render the tool use prompt as a string:
-tool_use_prompt = tokenizer.apply_chat_template(
+
+# format and tokenize the tool use prompt 
+inputs = tokenizer.apply_chat_template(
             conversation,
             tools=tools,
-            tokenize=False,
             add_generation_prompt=True,
+            return_dict=True,
+            return_tensors="pt",
 )
-
-inputs = tokenizer(tool_use_prompt, return_tensors="pt")
 
 model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, device_map="auto")
 
+inputs.to(model.device)
 outputs = model.generate(**inputs, max_new_tokens=1000)
 print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 ```
